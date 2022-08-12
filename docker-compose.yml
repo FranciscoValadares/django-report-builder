@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   db:
     image: postgres:12
@@ -26,3 +26,21 @@ services:
       C_FORCE_ROOT: "true"
     volumes:
       - .:/code
+  app:
+    build: ./js
+    command: sh -c "yarn start"
+    ports:
+      - 4200:4200
+    working_dir: /home/node/app
+    volumes:
+      - ./js:/home/node/app
+
+      # Exclude directories from bind mounts.
+      - ./js/node_modules/
+      - node_modules:/home/node/app/node_modules
+
+    depends_on:
+      - web
+
+volumes:
+  node_modules:
